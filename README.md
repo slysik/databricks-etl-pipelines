@@ -4,64 +4,9 @@ End-to-end streaming ETL pipeline for financial services credit card transaction
 
 ## Architecture
 
-```mermaid
-flowchart LR
-    subgraph Sources["Data Sources"]
-        CN[Card Networks]
-        POS[POS Terminals]
-        MW[Mobile Wallets]
-    end
+![FinServ ETL Pipeline - Medallion Architecture](docs/architecture.png)
 
-    subgraph Bronze["Bronze Layer"]
-        direction TB
-        B_TABLE[("dbx_weg.bronze\n.transactions\n45,244 rows")]
-        B_NOTES["ACID / exactly-once\nPartitioned by date\nImmutable audit trail\nTime travel enabled"]
-    end
-
-    subgraph Silver["Silver Layer"]
-        direction TB
-        S_TABLE[("dbx_weg.silver\n.transactions\n45,244 rows")]
-        S_NOTES["PII masked (PCI-DSS)\nDQ validation\nRisk enrichment\nMERGE INTO upserts"]
-        Q{"Quarantine"}
-    end
-
-    subgraph Gold["Gold Layer"]
-        direction TB
-        G1[("cardholder_features")]
-        G2[("merchant_risk_summary")]
-        G3[("hourly_volume_stats")]
-        G_NOTES["22+ ML features\nZ-ORDER optimized"]
-    end
-
-    subgraph MLflow["MLflow"]
-        direction TB
-        M_TRAIN["GradientBoosting\nRandomForest"]
-        M_TRACK["Experiment Tracking\nModel Comparison"]
-        M_PRED[("fraud_predictions")]
-    end
-
-    subgraph Serving["Serving Layer"]
-        PBI[Power BI / Genie AI]
-        DBSQL[DBSQL Dashboards]
-        FRAUD[Fraud Predictions]
-    end
-
-    Sources --> Bronze
-    Bronze --> Silver
-    Silver --> Gold
-    Silver -.-> Q
-    Gold --> MLflow
-    MLflow --> Serving
-    Gold --> Serving
-
-    style Bronze fill:#D4A574,stroke:#8B6914,color:#5C3D12
-    style Silver fill:#B8C4D0,stroke:#5A6A7A,color:#2C3E50
-    style Gold fill:#F5D76E,stroke:#B8860B,color:#6B4C00
-    style MLflow fill:#AEC6CF,stroke:#2C5F7C,color:#1A3A4A
-    style Q fill:#FFE0E0,stroke:#C0392B,color:#C0392B
-```
-
-> **Editable diagram:** Open [`docs/finserv-etl-pipeline.excalidraw`](docs/finserv-etl-pipeline.excalidraw) in [excalidraw.com](https://excalidraw.com) for a fully editable version with more detail.
+> **Editable version:** Open [`docs/finserv-etl-pipeline.excalidraw`](docs/finserv-etl-pipeline.excalidraw) in [excalidraw.com](https://excalidraw.com) to customize.
 
 ## Pipeline Overview
 
