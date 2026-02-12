@@ -6,8 +6,6 @@ End-to-end streaming ETL pipeline for financial services credit card transaction
 
 ![FinServ ETL Pipeline - Medallion Architecture](docs/architecture.png)
 
-> **Editable version:** Open [`docs/finserv-etl-pipeline.excalidraw`](docs/finserv-etl-pipeline.excalidraw) in [excalidraw.com](https://excalidraw.com) to customize.
-
 ## Pipeline Overview
 
 | Phase | Notebook | Layer | Key Concepts |
